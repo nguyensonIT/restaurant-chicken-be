@@ -1,0 +1,150 @@
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "username": "nguyenvanson26102000@gmail.com",
+    "password": "P@ssw0rd!2025",
+    "name": "Nguyễn Sơn"
+}
+
+###
+
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "username": "son26102000@gmail.com",
+    "password": "P@ssw0rd!2025"
+}
+
+
+###
+
+PUT http://localhost:5000/auth/update-name
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YmM0NTEzMjgyMmM5YWFiMDk2NGM5NSIsInVzZXJuYW1lIjoiMDM5OTc5MDA3MiIsIm5hbWUiOiIwMzk5NzkwMDcyIiwiY2FydCI6W10sImltYWdlIjoiIiwicm9sZXMiOltdLCJpYXQiOjE3MjM2MTQ1NzUsImV4cCI6MTcyMzYxODE3NX0.1eZj75MgF4OE_FF5qs8NATqKiW5JOSTF0oW1fp5LlDk
+
+{
+    "name": "Nguyễn Sơn"
+}
+
+###
+
+PUT http://localhost:5000/auth/change-password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzE3Yzk3ZTQzMjE5N2IyMzBjNTU4NyIsInVzZXJuYW1lIjoic29uMjQ2NTA0QGdtYWlsLmNvbSIsIm5hbWUiOiJzb24yNDY1MDRAZ21haWwuY29tIiwiY2FydCI6W10sImltYWdlIjoiIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE3MjM5NTY0ODgsImV4cCI6MTcyMzk2MDA4OH0.t7sGRZrlOstForF2dHY-QNuVnLtsW4xcaOaqRWLd_mM
+
+{
+  "currentPassword": "P@ssw0rd!2025",
+  "newPassword": "newpassword2024"
+}
+
+###
+
+POST http://localhost:5000/category
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
+
+{
+    "nameCategory": "Các món ếch"
+}
+
+###
+
+PUT http://localhost:5000/category/66badf9a2ef86e6ec15d4273
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
+
+{
+    "nameCategory": "Các món gà tươi"
+}
+
+###
+
+GET http://localhost:5000/category
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
+
+
+###
+
+DELETE http://localhost:5000/category/66ba097c705eb3b9247dddb7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
+
+
+###
+
+DELETE http://localhost:5000/category/66b61d983691d3d15a4c7df7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM0NzA3NjEsImV4cCI6MTcyMzQ3NDM2MX0.5p9Fhc31IZ-1IUP_QJOPM7d-4ZdKdWQSkkcGFdXmkyk
+
+###
+
+POST http://localhost:5000/product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
+
+{
+  "imgProduct": "",
+  "nameProduct": "Ếch xào măng",
+  "priceProduct": 150000,
+  "descProduct": "",
+  "category": "66bae4cb0c12f647be1be5c6"
+}
+
+###
+
+POST http://localhost:5000/product/update-active
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1Mjc3ODEsImV4cCI6MTcyMzUzMTM4MX0.DvjyP2xi7hRVOJBR-kkYj0DSl1CNyQ5aUkHriQu_cRs
+
+{
+  "id": "66bae0602ef86e6ec15d4278",
+  "isActive": true
+}
+
+###
+
+GET http://localhost:5000/product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzE3Yzk3ZTQzMjE5N2IyMzBjNTU4NyIsInVzZXJuYW1lIjoic29uMjQ2NTA0QGdtYWlsLmNvbSIsIm5hbWUiOiJzb24yNDY1MDRAZ21haWwuY29tIiwiY2FydCI6W10sImltYWdlIjoiIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE3MjM5NTY1OTksImV4cCI6MTcyMzk2MDE5OX0.ABQpmP89Jxt79PxhOeOl2Y9lN3rk5Ksr3ozizMtPWA4
+
+###
+
+GET http://localhost:5000/product/category/66bae4cb0c12f647be1be5c6
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
+
+###
+
+POST http://localhost:5000/update-sale
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1Mjc3ODEsImV4cCI6MTcyMzUzMTM4MX0.DvjyP2xi7hRVOJBR-kkYj0DSl1CNyQ5aUkHriQu_cRs
+
+{
+  "ids": ["66bae4d90c12f647be1be5c9","66bae0602ef86e6ec15d4278"],
+  "sale": 50
+}
+
+###
+
+POST http://localhost:5000/update-new-product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1Mjc3ODEsImV4cCI6MTcyMzUzMTM4MX0.DvjyP2xi7hRVOJBR-kkYj0DSl1CNyQ5aUkHriQu_cRs
+
+{
+  "ids": ["66bae4d90c12f647be1be5c9","66bae0602ef86e6ec15d4278"],
+  "newProduct": false
+}
+
+###
+
+POST http://localhost:5000/update-hot-product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1Mjc3ODEsImV4cCI6MTcyMzUzMTM4MX0.DvjyP2xi7hRVOJBR-kkYj0DSl1CNyQ5aUkHriQu_cRs
+
+{
+  "ids": ["66bae4d90c12f647be1be5c9","66bae0602ef86e6ec15d4278"],
+  "hotProduct": false
+}
