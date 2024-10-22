@@ -7,6 +7,7 @@ const protect = require('../app/middleware/authMiddleware')
 router.get('/', categoryController.getAllCategories);
 router.get('/:id', categoryController.getCategoryById);
 router.post('/',protect, categoryController.createCategory);
+router.put('/reorder-categories',protect, categoryController.reorderCategories);
 router.put('/:id',protect, categoryController.updateCategory);
 router.delete('/:id',protect, categoryController.deleteCategory);
 

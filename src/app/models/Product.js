@@ -6,11 +6,11 @@ const Product = new Schema({
   nameProduct: { type: String, required: true },
   priceProduct: { type: Number, required: true },
   descProduct: { type: String },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
   isActive: { type: Boolean, default: true },
   sale: { type: Number, default: 0 },
   newProduct: { type: Boolean, default: false },
   hotProduct: { type: Boolean, default: false },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 });
 
 module.exports = mongoose.model('Product', Product);

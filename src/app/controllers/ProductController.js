@@ -6,10 +6,47 @@ class ProductController {
     async getAllProducts(req, res) {
       try {
         const products = await Product.find().populate('category');
-        res.json(products);
-      } catch (err) {
-        res.status(500).json({ message: err.message });
-      }
+      // Tạo một đối tượng để nhóm sản phẩm theo category
+        const categoriesMap = {};
+
+        products.forEach(product => {
+        const categoryId = product.category._id.toString();
+      
+      // Kiểm tra nếu danh mục chưa có trong categoriesMap
+        if (!categoriesMap[categoryId]) {
+          categoriesMap[categoryId] = {
+            idCategory: categoryId,
+            nameCategory: product.category.nameCategory,
+            order: product.category.order,
+            products: []
+          };
+        }
+      
+      // Thêm sản phẩm vào danh mục tương ứng
+        categoriesMap[categoryId].products.push({
+          idProduct: product._id.toString(),
+          imgProduct: product.imgProduct,
+          nameProduct: product.nameProduct,
+          priceProduct: product.priceProduct,
+          descProduct: product.descProduct,
+          category: {
+            idCategory: categoryId,
+            nameCategory: product.category.nameCategory,
+          },
+          isActive: product.isActive,
+          sale: product.sale,
+          newProduct: product.newProduct,
+          hotProduct: product.hotProduct,
+        });
+    });
+
+    // Chuyển categoriesMap thành mảng để gửi về client
+    const result = Object.values(categoriesMap);
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
       };
 
       //[GET] /get products by category
@@ -46,13 +83,19 @@ class ProductController {
 
     //[POST] /create product
     async createProduct(req, res) {
-        
         try {
+
           // Tìm danh mục theo tên
           const category = await Category.findById(req.body.category);
           if (!category) return res.status(400).json({ message: 'Invalid category ID' });
         
-          const product = new Product(req.body);
+          const product = new Product({
+            nameProduct: req.body.nameProduct,
+            priceProduct: req.body.priceProduct,
+            imgProduct: req.body.imgProduct,
+            descProduct: req.body.descProduct,
+            category: req.body.category
+          });
           const newProduct = await product.save();
           res.status(201).json(newProduct);
         } catch (error) {
@@ -79,8 +122,11 @@ class ProductController {
         if (updateResult.nModified === 0) {
           return res.status(404).json({ message: 'Product not found' });
         }
+
+        // Lấy thông tin sản phẩm đã được cập nhật
+        const updatedProduct = await Product.findById(id);
     
-        res.status(200).json({ message: 'IsActive status updated' });
+        res.status(200).json({ message: 'IsActive status updated', data: updatedProduct });
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
