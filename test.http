@@ -163,7 +163,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlM
 
 ###
 
-GET http://localhost:5000/api/order
+GET https://localhost:5000/api/order
 
 ###
 
