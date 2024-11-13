@@ -4,24 +4,32 @@ class OrderController {
 
     //POST /order
     async createOrder(req, res) {
-        const getNextOrderNumber = async () => {
-            const lastOrder = await Order.findOne().sort({ orderNumber: -1 });
-            return lastOrder ? lastOrder.orderNumber + 1 : 1;
-        };
-        
-        try {
+      const getNextOrderNumber = async () => {
+        const lastOrder = await Order.findOne().sort({ orderNumber: -1 }); // Sử dụng -1 để lấy số đơn hàng cao nhất
+        return lastOrder ? lastOrder.orderNumber + 1 : 1;
+      };
+    
+      try {
         const orderNumber = await getNextOrderNumber();
-
-        const order = new Order({
-            orderNumber,
-            ...req.body,
-        });
-            await order.save();
-            res.status(201).json(order);
-        } catch (err) {
-            res.status(400).json({ message: err.message });
+        const { userOrderId, ...otherData } = req.body; // Tách userOrderId và thu thập các dữ liệu khác
+    
+        const orderData = {
+          orderNumber,
+          ...otherData,
+        };
+    
+        // Chỉ thêm userOrder nếu userOrderId được cung cấp
+        if (userOrderId) {
+          orderData.userOrder = userOrderId;
         }
-    };
+    
+        const order = new Order(orderData);
+        await order.save();
+        res.status(201).json(order);
+      } catch (err) {
+        res.status(400).json({ message: err.message });
+      }
+    }
 
     //[POST] /update is delivered order
     async updateIsDelivered (req, res) {
@@ -93,6 +101,56 @@ class OrderController {
         res.status(500).json({ error: 'Internal Server Error' });
       }
     }
+    async cancelOrderByCustomer(req, res) {
+      const { id } = req.body;
+      // Kiểm tra đầu vào
+      if (!id) {
+        return res.status(400).json({ error: 'Invalid input' });
+      }
+    
+      try {
+        // Lấy đơn hàng để kiểm tra thời gian đặt hàng
+        const order = await Order.findById(id);
+    
+        if (!order) {
+          return res.status(404).json({ message: 'Order not found' });
+        }
+    
+        // Kiểm tra nếu đã quá 3 phút kể từ khi đặt hàng
+        const orderDate = new Date(order.orderDate);
+        const currentTime = new Date();
+        const timeDifference = (currentTime - orderDate) / 60000; // Tính khoảng cách thời gian tính bằng phút
+    
+        if (timeDifference > 3) {
+          return res.status(400).json({ message: 'Order can only be canceled within 3 minutes of placing the order' });
+        }
+    
+        // Cập nhật trạng thái hủy đơn hàng
+        const updateResult = await Order.updateOne(
+          { _id: id },
+          {
+            $set: {
+              'statusOrder.isDelivered': false,
+              'statusOrder.isCanceled': true,
+              'statusOrder.isPreparing': false
+            }
+          }
+        );
+    
+        if (updateResult.nModified === 0) {
+          return res.status(404).json({ message: 'Failed to cancel order' });
+        }
+    
+        // Lấy thông tin đơn hàng đã được cập nhật
+        const updatedOrder = await Order.findById(id);
+    
+        res.status(200).json({ message: 'Order has been canceled', data: updatedOrder });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+    
     //[POST] /update is Preparing order
     async updateIsPreparing (req, res) {
       const { id, isPreparing } = req.body;
@@ -132,12 +190,45 @@ class OrderController {
     //GET /order
     async getOrders(req, res) {
         try {
-            const orders = await Order.find();
+            const orders = await Order.find().sort({ orderDate: -1 });
             res.status(200).json(orders);
         } catch (err) {
             res.status(400).json({ message: err.message });
         }
     };
+
+    // GET /order/:userOrderId
+    async getOrdersByUser(req, res) {
+      const { userOrderId } = req.params; // Lấy userOrderId từ URL params
+  
+      try {
+        // Tìm và sắp xếp đơn hàng theo userOrderId, sắp xếp theo orderDate từ mới nhất đến cũ nhất
+        const orders = await Order.find({ userOrder: userOrderId })
+            .sort({ orderDate: -1 }); // -1 là sắp xếp giảm dần (mới nhất đến cũ nhất)
+
+        // Trả về mảng đơn hàng, nếu không có đơn hàng thì trả về mảng rỗng
+        res.status(200).json({ message: "Orders fetched successfully.", data: orders });
+    } catch (err) {
+        console.error(err);  // In lỗi ra console để debug
+        res.status(500).json({ message: "An error occurred while fetching orders.", error: err.message });
+    }
+  }
+
+  // GET /order-by-sub/:subId
+  async getOrdersBySubId(req, res) {
+    const { subId } = req.params; // Lấy subId từ URL params
+
+    try {
+      // Tìm và sắp xếp đơn hàng theo subId, sắp xếp theo orderDate từ mới nhất đến cũ nhất
+      const orders = await Order.find({ subId })
+
+      // Trả về mảng đơn hàng, nếu không có đơn hàng thì trả về mảng rỗng
+      res.status(200).json({ message: "Orders fetched successfully.", data: orders });
+    } catch (err) {
+      console.error(err); // In lỗi ra console để debug
+      res.status(500).json({ message: "An error occurred while fetching orders.", error: err.message });
+    }
+  }
 }
 
 module.exports = new OrderController

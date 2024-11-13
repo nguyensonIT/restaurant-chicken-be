@@ -2,21 +2,37 @@ const Post = require('../models/Post');
 
 class PostController {
 
-      async createPost (req, res) {
+      async createPost(req, res) {
+        console.log(req.user.roles);
+        
         try {
+          const { content, userId, images } = req.body;
+      
+          // Kiểm tra dữ liệu đầu vào
+          if (!content || !userId) {
+            return res.status(400).json({ error: "Content and userId are required." });
+          }
+      
+          // Kiểm tra vai trò của người dùng
+          if (req.user.roles.some(role=>role!=="admin")) {
+            return res.status(403).json({ error: "Access denied. Only admins can create posts." });
+          }
+      
           const lastPost = await Post.findOne().sort({ order: -1 });
           const post = new Post({
-            content: req.body.content,
-            userId: req.body.userId,
-            images: req.body.images,
+            content,
+            userId,
+            images,
             order: lastPost ? lastPost.order + 1 : 1
           });
+      
           await post.save();
           res.status(201).json(post);
         } catch (error) {
           res.status(400).json({ error: error.message });
         }
-      };
+      }
+  
 
       async getPosts (req, res) {
         try {
@@ -24,7 +40,7 @@ class PostController {
             .populate('comments')
             .populate('userId', 'name image')
             .populate('likedBy', 'name image')
-            .sort({ order: 1 });
+            .sort({ order: -1 });
           res.status(200).json(posts);
         } catch (error) {
           res.status(400).json({ error: error.message });

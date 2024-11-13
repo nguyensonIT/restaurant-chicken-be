@@ -1,6 +1,9 @@
 const Product = require("../models/Product")
 const Category = require("../models/Category")
 
+const { uploadFileToCloudinary, deleteFileFromCloudinary } = require('../../services/fileUploadService');
+const { getPublicIdFromUrl } = require('../../utils/getIdImageCloudinary');
+
 class ProductController {
     //[GET] /all product
     async getAllProducts(req, res) {
@@ -81,27 +84,55 @@ class ProductController {
       }
       };
 
-    //[POST] /create product
+    // [POST] /create product
     async createProduct(req, res) {
-        try {
-
-          // Tìm danh mục theo tên
+      try {
+          // Tìm danh mục theo ID
           const category = await Category.findById(req.body.category);
           if (!category) return res.status(400).json({ message: 'Invalid category ID' });
-        
+
+          let imageUrl = '';
+
+          // Kiểm tra nếu có ảnh được gửi từ client
+          if (req.file) {
+              // Upload file ảnh từ form lên Cloudinary
+              imageUrl = await uploadFileToCloudinary(req.file, 'uploads/products');
+          } else if (req.body.imgProduct && req.body.imgProduct.startsWith('data:image')) {
+              // Nếu imgProduct là base64
+              const base64Data = req.body.imgProduct.replace(/^data:image\/\w+;base64,/, '');  // Loại bỏ tiền tố
+              const buffer = Buffer.from(base64Data, 'base64');  // Chuyển base64 thành Buffer
+
+              const fileName = `product_${Date.now()}.jpeg`;  // Tạo tên file duy nhất
+              const fileUpload = {
+                  originalname: fileName,
+                  mimetype: 'image/jpeg',
+                  buffer,  // Sử dụng buffer thay vì file path
+              };
+
+              // Upload ảnh base64 lên Cloudinary
+              imageUrl = await uploadFileToCloudinary(fileUpload, 'uploads/products');
+          } else {
+              return res.status(400).json({ message: 'Invalid image data' });
+          }
+
+          // Tạo sản phẩm mới với URL ảnh từ Cloudinary
           const product = new Product({
-            nameProduct: req.body.nameProduct,
-            priceProduct: req.body.priceProduct,
-            imgProduct: req.body.imgProduct,
-            descProduct: req.body.descProduct,
-            category: req.body.category
+              nameProduct: req.body.nameProduct,
+              priceProduct: req.body.priceProduct,
+              imgProduct: imageUrl,  // Lưu URL ảnh từ Cloudinary
+              descProduct: req.body.descProduct,
+              category: req.body.category
           });
+
+          // Lưu sản phẩm vào cơ sở dữ liệu
           const newProduct = await product.save();
           res.status(201).json(newProduct);
-        } catch (error) {
-          res.status(400).json({ message: error.message });
-        }
-      };
+      } catch (error) {
+          console.error('Error creating product:', error);
+          res.status(500).json({ message: 'Server error: ' + error.message });
+      }
+    }
+
 
     //[POST] /update is active product
     async updateIsActiveProduct (req, res) {
@@ -133,30 +164,86 @@ class ProductController {
       }
     }
 
-    //[PUT] /update product
+    // [PUT] /update product
     async updateProduct(req, res) {
       try {
-        const category = await Category.findById(req.body.category);
-        if (!category) return res.status(400).json({ message: 'Invalid category ID' });
-    
-        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('category');
-        if (!product) return res.status(404).json({ message: 'Product not found' });
-        res.json(product);
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
-      };
+          // Kiểm tra danh mục
+          const category = await Category.findById(req.body.category);
+          if (!category) return res.status(400).json({ message: 'Invalid category ID' });
 
-    //[DELETE] /delete product
+          // Tìm sản phẩm cần cập nhật
+          const product = await Product.findById(req.params.id);
+          if (!product) return res.status(404).json({ message: 'Product not found' });
+
+         // Kiểm tra nếu ảnh cũ là URL từ Cloudinary hay base64
+          const oldImageIsCloudinaryUrl = product.imgProduct && !product.imgProduct.startsWith('data:image');
+          const oldImagePublicId = oldImageIsCloudinaryUrl ? getPublicIdFromUrl(product.imgProduct) : null;
+
+          // Xử lý ảnh nếu có
+          let imageUrl = product.imgProduct;  // Giữ nguyên URL ảnh hiện tại nếu không có ảnh mới
+
+          if (req.file) {
+              // Nếu ảnh mới được gửi từ form dưới dạng file, upload lên Cloudinary và xóa ảnh cũ
+              imageUrl = await uploadFileToCloudinary(req.file, 'uploads/products', oldImagePublicId);
+          } else if (req.body.imgProduct && req.body.imgProduct.startsWith('data:image')) {
+              // Nếu imgProduct là base64
+              const base64Data = req.body.imgProduct.replace(/^data:image\/\w+;base64,/, '');  // Loại bỏ tiền tố
+              const buffer = Buffer.from(base64Data, 'base64');  // Chuyển base64 thành Buffer
+
+              const fileName = `product_${Date.now()}.jpeg`;  // Tạo tên file duy nhất
+              const fileUpload = {
+                  originalname: fileName,
+                  mimetype: 'image/jpeg',
+                  buffer,  // Sử dụng buffer thay vì file path
+              };
+
+              // Upload ảnh base64 lên Cloudinary và xóa ảnh cũ nếu cần
+              imageUrl = await uploadFileToCloudinary(fileUpload, 'uploads/products', oldImagePublicId);
+          }
+
+          // Cập nhật các trường của sản phẩm
+          product.nameProduct = req.body.nameProduct || product.nameProduct;
+          product.priceProduct = req.body.priceProduct || product.priceProduct;
+          product.imgProduct = imageUrl;  // Cập nhật URL ảnh mới
+          product.descProduct = req.body.descProduct || product.descProduct;
+          product.category = req.body.category || product.category;
+
+          // Lưu các thay đổi vào cơ sở dữ liệu
+          const updatedProduct = await product.save();
+          res.json(updatedProduct);
+      } catch (err) {
+          console.error('Error updating product:', err);
+          res.status(500).json({ message: 'Server error: ' + err.message });
+      }
+    }
+
+
+
+    // [DELETE] /delete product
     async deleteProduct(req, res) {
       try {
-        const product = await Product.findByIdAndDelete(req.params.id);
-        if (!product) return res.status(404).json({ message: 'Product not found' });
-        res.json({ message: 'Product deleted' });
+          const product = await Product.findById(req.params.id);
+          if (!product) return res.status(404).json({ message: 'Product not found' });
+
+          // Kiểm tra nếu ảnh là URL từ Cloudinary (không phải base64)
+          if (product.imgProduct && !product.imgProduct.startsWith('data:image')) {
+              const oldImagePublicId = getPublicIdFromUrl(product.imgProduct);
+
+              // Xóa ảnh từ Cloudinary nếu có `public_id`
+              if (oldImagePublicId) {
+                  await deleteFileFromCloudinary(oldImagePublicId);
+              }
+          }
+
+          // Xóa sản phẩm khỏi cơ sở dữ liệu
+          await Product.findByIdAndDelete(req.params.id);
+          res.json({ message: 'Product deleted' });
       } catch (err) {
-        res.status(500).json({ message: err.message });
+          console.error('Error deleting product:', err);
+          res.status(500).json({ message: 'Server error: ' + err.message });
       }
-      };
+    }
+
 }
 
 module.exports = new ProductController

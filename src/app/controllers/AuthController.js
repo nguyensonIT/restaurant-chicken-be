@@ -1,19 +1,44 @@
+
+const { uploadFileToCloudinary } = require('../../services/fileUploadService');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+
+const { getPublicIdFromUrl } = require('../../utils/getIdImageCloudinary');
 
 class AuthController{
     //[POST] /auth/register
     async registerUser(req, res) {
         const { username, password, name } = req.body;
-        
-        try {
-          const user = new User({ username, password, name });
-          await user.save();
-          res.status(201).json({ response: {data:{message: 'User registered successfully'}, status: 201} });
-        } catch (error) {
-          res.status(400).json({ message: error.message });
+
+        // Kiểm tra xem tất cả các trường có tồn tại hay không
+        if (!username || !password ) {
+            return res.status(400).json({ message: 'Tất cả các trường đều là bắt buộc.' });
         }
-      };
+
+        try {
+            // Kiểm tra xem người dùng đã tồn tại chưa
+            const existingUser = await User.findOne({ username });
+            if (existingUser) {
+                return res.status(400).json({ message: 'Tài khoản này đã được đăng ký. Vui lòng thử lại!' });
+            }
+
+            // Tạo người dùng mới
+            const user = new User({ username, password, name });
+            await user.save();
+
+            // Tạo token
+            const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '20h' }); 
+
+            res.status(201).json({
+              message: 'User registered successfully',
+              token: token // Trả về token
+            });
+        } catch (error) {
+            console.error(error); // Ghi log lỗi để phục vụ việc gỡ lỗi
+            res.status(500).json({ message: 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.' });
+        }
+    }
+
 
     //[POST] /auth/login
     async loginUser(req, res) {
@@ -30,9 +55,12 @@ class AuthController{
             id: user._id,
             username: user.username,
             name: user.name,
-            cart: user.cart,
             image: user.image,
-            roles: user.roles   // Thêm thông tin quyền hạn (roles) nếu có
+            email: user.email,
+            roles: user.roles,
+            address: user.address,
+            phoneNumber: user.phoneNumber,
+            createdAt: user.createdAt
         };
       
           const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '20h' });
@@ -44,9 +72,12 @@ class AuthController{
                 id: user._id,
                 username: user.username,
                 name: user.name,
-                cart: user.cart,
                 image: user.image,
-                roles: user.roles
+                email: user.email,
+                roles: user.roles,
+                address: user.address,
+                phoneNumber: user.phoneNumber,
+                createdAt: user.createdAt
             },
         });
         } catch (error) {
@@ -54,43 +85,78 @@ class AuthController{
         }
       };
 
-    //[PUT] /auth/update-profile
-    async updateProfile(req, res) {
-      const userId = req.user.id;
-      const { name, image } = req.body;
+      //[PUT] /auth/update-profile
+      async updateProfile(req, res) {
+        const userId = req.user.id;  // Lấy ID người dùng từ token hoặc session
+        const { name, image, address, email, phoneNumber } = req.body;
 
-    try {
-      const user = await User.findById(userId);
-      if (!user) return res.status(404).json({ message: 'User not found' });
+        try {
+          const user = await User.findById(userId);
+          if (!user) return res.status(404).json({ message: 'User not found' });
 
-      // Cập nhật tên và ảnh
-      if (name) user.name = name;
-      if (image) user.image = image;
+          // Lấy public_id của ảnh cũ (nếu có)
+          const oldImagePublicId = user.image ? getPublicIdFromUrl(user.image) : null;
 
-      await user.save();
+          // Xử lý trường image nếu có
+          if (req.file) {
+            // Nếu người dùng upload file ảnh từ form
+            const imageUrl = await uploadFileToCloudinary(req.file, 'uploads/avatar', oldImagePublicId);  // Upload ảnh lên Cloudinary và xóa ảnh cũ
+            user.image = imageUrl;  // Cập nhật trường image với URL ảnh từ Cloudinary
+          } else if (image) {
+            // Nếu image là base64
+            if (image.startsWith('data:image')) {
+              const base64Data = image.replace(/^data:image\/\w+;base64,/, '');  // Loại bỏ tiền tố
+              const buffer = Buffer.from(base64Data, 'base64');  // Chuyển base64 thành Buffer
 
-      // Tạo token mới
-      const token = jwt.sign(
-        {
-          id: user._id,
-          name: user.name,
-          image: user.image,
-          roles: user.roles // Nếu cần
-        },
-        process.env.JWT_SECRET, // Sử dụng biến môi trường cho khóa bí mật
-        { expiresIn: '20h' } // Thời gian hết hạn
-      );
+              const fileName = `profile_${userId}_${Date.now()}.jpeg`;  // Tạo tên file duy nhất
+              const fileUpload = {
+                originalname: fileName,
+                mimetype: 'image/jpeg',
+                buffer,  // Sử dụng buffer thay vì file path
+              };
 
-      res.json({ 
-        id: user._id,
-        name: user.name,
-        image: user.image,
-        token 
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Server error: ' + error.message });
-    }
-    }
+              const imageUrl = await uploadFileToCloudinary(fileUpload, 'uploads/avatar', oldImagePublicId);  // Upload ảnh mới và xóa ảnh cũ
+              user.image = imageUrl;  // Cập nhật trường image với URL ảnh từ Cloudinary
+            } else {
+              return res.status(400).json({ message: 'Invalid image data' });
+            }
+          }
+
+          // Cập nhật các trường khác của người dùng
+          if (name) user.name = name;
+          if (address) user.address = address;
+          if (email) user.email = email;
+          if (phoneNumber) user.phoneNumber = phoneNumber;
+
+          // Lưu đối tượng người dùng sau khi cập nhật
+          await user.save();
+
+          // Tạo token mới
+          const token = jwt.sign(
+            {
+              id: user._id,
+              name: user.name,
+              image: user.image,  // Đảm bảo image được đưa vào token
+              address: user.address,
+              email: user.email,
+              phoneNumber: user.phoneNumber,
+              roles: user.roles,
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '20h' }
+          );
+
+          // Trả về kết quả thành công với thông tin người dùng và token
+          res.status(200).json({
+            message: 'Profile updated successfully',
+            token,
+          });
+        } catch (error) {
+          console.error('Error updating profile:', error);
+          res.status(500).json({ message: 'Server error: ' + error.message });
+        }
+      }
+      
     
 
     //[PUT] /auth/change-password

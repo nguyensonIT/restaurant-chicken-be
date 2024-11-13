@@ -29,6 +29,7 @@ const Order = new Schema({
             sale: { type: Number, default: 0 },
         },
     ],
+    userOrder: { type: Schema.Types.ObjectId, ref: 'User'}
 });
 
 module.exports = mongoose.model('Order', Order);

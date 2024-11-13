@@ -2,9 +2,9 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "son246504@gmail.com",
+    "username": "son78799@gmail.com",
     "password": "Son123@A",
-    "name": "Nguyễn Sơn 1"
+    "name" : ""
 }
 
 ###
@@ -22,22 +22,25 @@ Content-Type: application/json
 
 PUT http://localhost:5000/api/auth/update-profile
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzZjNjEyZjUxNDdiM2MzODJhZjdhNCIsInVzZXJuYW1lIjoiaGloaWhpMTIzNDU2QGdtYWlsLmNvbSIsIm5hbWUiOiJNaW5oIE5ndXnhu4VuIiwiY2FydCI6W10sImltYWdlIjoiaHR0cHM6Ly9pbWcuZnJlZXBpay5jb20vZnJlZS1waG90by9hbmRyb2d5bm91cy1hdmF0YXItbm9uLWJpbmFyeS1xdWVlci1wZXJzb25fMjMtMjE1MTEwMDI3MC5qcGc_c2l6ZT0zMzgmZXh0PWpwZyZnYT1HQTEuMS4xMDIzOTY3NTgzLjE3Mjk0Njg4MDAmc2VtdD1haXNfaHlicmlkIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE3Mjk1NzYzODEsImV4cCI6MTcyOTY0ODM4MX0.Vf3wUW4Rg8Di9cQtI1G4SJjPL7YnQc_g12JYnfK9EM4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MmU4NTVkMjY5N2JjMGFlZjI2MCIsInVzZXJuYW1lIjoiaGloaWhpMTIzNDU2QGdtYWlsLmNvbSIsIm5hbWUiOiJoaWhpaGkxMjM0NTZAZ21haWwuY29tIiwiaW1hZ2UiOiJodHRwczovL2kucGluaW1nLmNvbS9vcmlnaW5hbHMvMmIvMGYvN2EvMmIwZjdhOTUzMzIzN2I3ZTliNDlmNjJiYTczYjk1ZGMuanBnIiwiZW1haWwiOiJoaWhpaGkxMjM0NTZAZ21haWwuY29tIiwicm9sZXMiOlsidXNlciJdLCJhZGRyZXNzIjoiIiwicGhvbmVOdW1iZXIiOiIiLCJjcmVhdGVkQXQiOiIyMDI0LTExLTAxVDA1OjExOjA0LjQyM1oiLCJpYXQiOjE3MzA3ODEzMDYsImV4cCI6MTczMDg1MzMwNn0.NoaoUjmi_1LhqedDumvz8y1TtQT_m9uk7vdDpC8EMdI
 
 {
-    "name": "Sao Nguyễn",
-    "image": "https://t3.ftcdn.net/jpg/06/17/13/26/360_F_617132669_YptvM7fIuczaUbYYpMe3VTLimwZwzlWf.jpg"
+    "name": "Sơn Nguyễn",
+    "image": "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg",
+    "address": "106 Nguyễn Khiêm Ích, Trâu Quỳ GL",
+    "phoneNumber": "0399790072",
+    "email": ""
 }
 
 ###
 
-PUT http://localhost:5000/auth/change-password
+PUT http://localhost:5000/api/change-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzE3Yzk3ZTQzMjE5N2IyMzBjNTU4NyIsInVzZXJuYW1lIjoic29uMjQ2NTA0QGdtYWlsLmNvbSIsIm5hbWUiOiJzb24yNDY1MDRAZ21haWwuY29tIiwiY2FydCI6W10sImltYWdlIjoiIiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE3MjM5NTY0ODgsImV4cCI6MTcyMzk2MDA4OH0.t7sGRZrlOstForF2dHY-QNuVnLtsW4xcaOaqRWLd_mM
+Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MmU4NTVkMjY5N2JjMGFlZjI2MCIsInVzZXJuYW1lIjoiaGloaWhpMTIzNDU2QGdtYWlsLmNvbSIsIm5hbWUiOiJoaWhpaGkxMjM0NTZAZ21haWwuY29tIiwiaW1hZ2UiOiJodHRwczovL2kucGluaW1nLmNvbS9vcmlnaW5hbHMvMmIvMGYvN2EvMmIwZjdhOTUzMzIzN2I3ZTliNDlmNjJiYTczYjk1ZGMuanBnIiwiZW1haWwiOiJoaWhpaGkxMjM0NTZAZ21haWwuY29tIiwicm9sZXMiOlsidXNlciJdLCJhZGRyZXNzIjoiIiwicGhvbmVOdW1iZXIiOiIiLCJjcmVhdGVkQXQiOiIyMDI0LTExLTAxVDA1OjExOjA0LjQyM1oiLCJpYXQiOjE3MzA2OTgxNjYsImV4cCI6MTczMDc3MDE2Nn0.FpQqm8UHyy6HaEeinDZ49Zw2-8ZG8H0ZffgXLKelxbw"
 
 {
-  "currentPassword": "P@ssw0rd!2025",
-  "newPassword": "newpassword2024"
+  "currentPassword": "Son123@Aa",
+  "newPassword": "Son123@AA"
 }
 
 ###
@@ -117,6 +120,10 @@ GET http://localhost:5000/api/products
 
 ###
 
+GET http://localhost:5000/api/category
+
+###
+
 GET http://localhost:5000/product/category/66bae4cb0c12f647be1be5c6
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlMzY5MWQzZDE1YTRjN2RmOSIsInVzZXJuYW1lIjoiam9obl9kb2UxMjMiLCJpYXQiOjE3MjM1MjI3MDcsImV4cCI6MTcyMzUyNjMwN30.vhQgqexsMJRFMMu8ylC9kvOX9-cqj5FL-gc3FWJpWq8
@@ -157,6 +164,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlM
 ###
 
 GET http://localhost:5000/api/order
+
+###
+
+GET http://localhost:5000/api/order/6724625d94bfff5a6746f6eb
 
 ###
 
@@ -243,11 +254,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzVkYzcxN
 
 POST http://localhost:5000/api/post
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzVkYzcxNWY2ZWZhMjQ1MGE5OTQ4MiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6Ik5ndXnhu4VuIFPGoW4iLCJjYXJ0IjpbXSwiaW1hZ2UiOiIiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MjgzOTI0MTIsImV4cCI6MTcyODQ2NDQxMn0.6k8-3KZ0kejqngsGQsbKx0lcjI2_vKq0uZhWh-joBV8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MjVkOTRiZmZmNWE2NzQ2ZjZlYiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6IlZ1YSBnw6AgdMawxqFpIiwiaW1hZ2UiOiIiLCJlbWFpbCI6Im5ndXllbnZhbnNvbjI2MTAyMDAwQGdtYWlsLmNvbSIsInJvbGVzIjpbImFkbWluIl0sImFkZHJlc3MiOiIiLCJwaG9uZU51bWJlciI6IiIsImNyZWF0ZWRBdCI6IjIwMjQtMTEtMDNUMDU6MDM6MzguMDEwWiIsImlhdCI6MTczMDYxMDIxOCwiZXhwIjoxNzMwNjgyMjE4fQ.uXRQPdKgNIGxUwYKlOh9vadEvDlg7m2ZqGDBSroMlXQ
 
 {
-  "content": "Đây là một bài viết mẫu. 2222222",
-  "userId": "66c5dc715f6efa2450a99482",
+  "content": "Đây là một bài viết mẫu mới",
+  "userId": "6724625d94bfff5a6746f6eb",
   "images": ["https://placehold.co/600x400/png","https://placehold.co/400"]
 }
 
@@ -270,12 +281,12 @@ Content-Type: application/json
 
 POST http://localhost:5000/api/comment
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzVkYzcxNWY2ZWZhMjQ1MGE5OTQ4MiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6Ik5ndXnhu4VuIFPGoW4iLCJjYXJ0IjpbXSwiaW1hZ2UiOiIiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3Mjg3MzI4NDIsImV4cCI6MTcyODgwNDg0Mn0.t6M8tnagvgEHR50jdbayWpC485wTHIpnnhC9JT1vrjE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MjVkOTRiZmZmNWE2NzQ2ZjZlYiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6IlZ1YSBnw6AgdMawxqFpIiwiaW1hZ2UiOiIiLCJlbWFpbCI6Im5ndXllbnZhbnNvbjI2MTAyMDAwQGdtYWlsLmNvbSIsInJvbGVzIjpbImFkbWluIl0sImFkZHJlc3MiOiIiLCJwaG9uZU51bWJlciI6IiIsImNyZWF0ZWRBdCI6IjIwMjQtMTEtMDNUMDU6MDM6MzguMDEwWiIsImlhdCI6MTczMDYxMDIxOCwiZXhwIjoxNzMwNjgyMjE4fQ.uXRQPdKgNIGxUwYKlOh9vadEvDlg7m2ZqGDBSroMlXQ
 
 {
-  "postId": "67055921dec42cf4284f30e7",
+  "postId": "6727795422449becb5d8afc0",
   "contentCmt": "Đây là comment chính",
-  "userId": "66c5dc715f6efa2450a99482",
+  "userId": "6724625d94bfff5a6746f6eb",
   "imageCmt": "https://placehold.co/600x400/png"
 }
 
@@ -283,15 +294,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzVkYzcxN
 
 POST http://localhost:5000/api/comment
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzVkYzcxNWY2ZWZhMjQ1MGE5OTQ4MiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6Ik5ndXnhu4VuIFPGoW4iLCJjYXJ0IjpbXSwiaW1hZ2UiOiIiLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3Mjg3MzI4NDIsImV4cCI6MTcyODgwNDg0Mn0.t6M8tnagvgEHR50jdbayWpC485wTHIpnnhC9JT1vrjE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MjVkOTRiZmZmNWE2NzQ2ZjZlYiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6IlZ1YSBnw6AgdMawxqFpIiwiaW1hZ2UiOiIiLCJlbWFpbCI6Im5ndXllbnZhbnNvbjI2MTAyMDAwQGdtYWlsLmNvbSIsInJvbGVzIjpbImFkbWluIl0sImFkZHJlc3MiOiIiLCJwaG9uZU51bWJlciI6IiIsImNyZWF0ZWRBdCI6IjIwMjQtMTEtMDNUMDU6MDM6MzguMDEwWiIsImlhdCI6MTczMDYxMDIxOCwiZXhwIjoxNzMwNjgyMjE4fQ.uXRQPdKgNIGxUwYKlOh9vadEvDlg7m2ZqGDBSroMlXQ
 
 {
-  "postId": "67055921dec42cf4284f30e7",
+  "postId": "6727795422449becb5d8afc0",
   "contentCmt": "Trả lời bình luận của Nguyễn Sơn",
-  "userId": "66c5dc715f6efa2450a99482",
+  "userId": "6724625d94bfff5a6746f6eb",
   "imageCmt": "https://placehold.co/600x400/png",
-  "parentId": "670a691720f9f62235ac6b74",
-  "replyToUserId": "66c6c612f5147b3c382af7a4"
+  "parentId": "6727c99e22449becb5d8b04f",
+  "replyToUserId": "6724625d94bfff5a6746f6eb"
 }
 
 ###
