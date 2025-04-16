@@ -3,7 +3,7 @@ const Post = require('../models/Post');
 class PostController {
 
       async createPost(req, res) {
-        console.log(req.user.roles);
+        console.log(req.body);
         
         try {
           const { content, userId, images } = req.body;

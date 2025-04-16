@@ -13,7 +13,7 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "hihihi123456@gmail.com",
+    "username": "nguyenvanson26102000@gmail.com",
     "password": "Son123@A"
 }
 
@@ -163,7 +163,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjYxZGRlM
 
 ###
 
-GET https://localhost:5000/api/order
+GET http://localhost:5000/api/order
 
 ###
 
@@ -254,12 +254,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YzVkYzcxN
 
 POST http://localhost:5000/api/post
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MjVkOTRiZmZmNWE2NzQ2ZjZlYiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6IlZ1YSBnw6AgdMawxqFpIiwiaW1hZ2UiOiIiLCJlbWFpbCI6Im5ndXllbnZhbnNvbjI2MTAyMDAwQGdtYWlsLmNvbSIsInJvbGVzIjpbImFkbWluIl0sImFkZHJlc3MiOiIiLCJwaG9uZU51bWJlciI6IiIsImNyZWF0ZWRBdCI6IjIwMjQtMTEtMDNUMDU6MDM6MzguMDEwWiIsImlhdCI6MTczMDYxMDIxOCwiZXhwIjoxNzMwNjgyMjE4fQ.uXRQPdKgNIGxUwYKlOh9vadEvDlg7m2ZqGDBSroMlXQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MzQyYTc5ZWViN2Y3MDYzNzIzZGRmMiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6IlZ1YSBHw6AgVMawxqFpIiwiaW1hZ2UiOiIiLCJlbWFpbCI6Im5ndXllbnZhbnNvbjI2MTAyMDAwQGdtYWlsLmNvbSIsInJvbGVzIjpbImFkbWluIl0sImFkZHJlc3MiOiIxMDYgTmd1eeG7hW4gS2hpw6ptIMONY2gsIFRyw6J1IFF14buzLCBHTCwgSE4iLCJwaG9uZU51bWJlciI6IjA5NzM5ODg3NTkiLCJjcmVhdGVkQXQiOiIyMDI0LTExLTEzVDA0OjI2OjMzLjA2N1oiLCJpYXQiOjE3MzIxMDU4NzksImV4cCI6MTczMjE3Nzg3OX0.laL1ukjlLMDTujjZESOJ_R3tSjCxFsDnaT-PKoJnYTA
 
 {
   "content": "Đây là một bài viết mẫu mới",
   "userId": "6724625d94bfff5a6746f6eb",
-  "images": ["https://placehold.co/600x400/png","https://placehold.co/400"]
+  "images": ["https://placehold.co/600x400/png","https://placehold.co/400","https://placehold.co/400","https://placehold.co/400"]
 }
 
 ###
@@ -308,6 +308,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MjVkO
 ###
 
 GET http://localhost:5000/api/comment/67055921dec42cf4284f30e7
+
+###
+
+PUT http://localhost:5000/api/update-logo
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjQ2MjVkOTRiZmZmNWE2NzQ2ZjZlYiIsInVzZXJuYW1lIjoibmd1eWVudmFuc29uMjYxMDIwMDBAZ21haWwuY29tIiwibmFtZSI6IlZ1YSBnw6AgdMawxqFpIiwiaW1hZ2UiOiJodHRwczovL3Jlcy5jbG91ZGluYXJ5LmNvbS9kbjZmd2NrYXcvaW1hZ2UvdXBsb2FkL3YxNzMwOTU3NDU5L3VwbG9hZHMvYXZhdGFyLzE3MzA5NTc0NTc0NzkuanBlZy5qcGciLCJlbWFpbCI6Im5ndXllbnZhbnNvbjI2MTAyMDAwQGdtYWlsLmNvbSIsInJvbGVzIjpbImFkbWluIl0sImFkZHJlc3MiOiIiLCJwaG9uZU51bWJlciI6IiIsImNyZWF0ZWRBdCI6IjIwMjQtMTEtMDdUMDU6MzA6NTcuNDc5WiIsImlhdCI6MTc0NDI4NzIyOCwiZXhwIjoxNzQ0MzU5MjI4fQ.Fcxhaenu8DGIy1zO5b-cYQitpoRc3JdOZfsGrdXp61s
+
+{
+  "logoUrl" : "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"
+}
+
+###
+
+GET http://localhost:5000/api/logo
 
 
 
