@@ -4,8 +4,17 @@ class OrderController {
   //POST /order
   async createOrder(req, res) {
     const getNextOrderNumber = async () => {
-      const lastOrder = await Order.findOne().sort({ orderNumber: -1 }); // Sử dụng -1 để lấy số đơn hàng cao nhất
-      return lastOrder ? lastOrder.orderNumber + 1 : 1;
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const lastOrderToday = await Order.findOne({
+        orderDate: { $gte: startOfDay, $lte: endOfDay },
+      }).sort({ orderNumber: -1 });
+
+      return lastOrderToday ? lastOrderToday.orderNumber + 1 : 1;
     };
 
     try {
@@ -125,12 +134,10 @@ class OrderController {
       const timeDifference = (currentTime - orderDate) / 60000; // Tính khoảng cách thời gian tính bằng phút
 
       if (timeDifference > 3) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "Order can only be canceled within 3 minutes of placing the order",
-          });
+        return res.status(400).json({
+          message:
+            "Order can only be canceled within 3 minutes of placing the order",
+        });
       }
 
       // Cập nhật trạng thái hủy đơn hàng
@@ -225,12 +232,10 @@ class OrderController {
         .json({ message: "Orders fetched successfully.", data: orders });
     } catch (err) {
       console.error(err); // In lỗi ra console để debug
-      res
-        .status(500)
-        .json({
-          message: "An error occurred while fetching orders.",
-          error: err.message,
-        });
+      res.status(500).json({
+        message: "An error occurred while fetching orders.",
+        error: err.message,
+      });
     }
   }
 
@@ -248,12 +253,10 @@ class OrderController {
         .json({ message: "Orders fetched successfully.", data: orders });
     } catch (err) {
       console.error(err); // In lỗi ra console để debug
-      res
-        .status(500)
-        .json({
-          message: "An error occurred while fetching orders.",
-          error: err.message,
-        });
+      res.status(500).json({
+        message: "An error occurred while fetching orders.",
+        error: err.message,
+      });
     }
   }
 }
