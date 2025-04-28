@@ -4,38 +4,47 @@ class OrderController {
   //POST /order
   async createOrder(req, res) {
     const getNextOrderNumber = async () => {
-      const startOfDay = new Date();
-      startOfDay.setHours(0, 0, 0, 0);
+      // Lấy ngày hiện tại từ orderDate trong request body, nếu không có sẽ sử dụng thời gian hiện tại
+      const orderDate = new Date(req.body.orderDate || Date.now());
 
-      const endOfDay = new Date();
-      endOfDay.setHours(23, 59, 59, 999);
+      // Lấy ngày đầu tiên trong ngày (00:00:00)
+      const startOfDay = new Date(orderDate.setHours(0, 0, 0, 0));
 
-      const lastOrderToday = await Order.findOne({
-        orderDate: { $gte: startOfDay, $lte: endOfDay },
-      }).sort({ orderNumber: -1 });
+      // Định dạng ngày để tạo phần sau của orderNumber (ngày-tháng-năm)
+      const dateStr = `${startOfDay.getDate()}${
+        startOfDay.getMonth() + 1
+      }${startOfDay.getFullYear()}`; // Ví dụ "2642025"
 
-      return lastOrderToday ? lastOrderToday.orderNumber + 1 : 1;
+      // Tính số đơn hàng trong ngày (orderIndex)
+      const todayOrdersCount = await Order.countDocuments({
+        orderDate: { $gte: startOfDay, $lte: new Date() },
+      });
+
+      const orderIndex = todayOrdersCount + 1; // Số thứ tự đơn hàng trong ngày
+
+      return `${orderIndex}-${dateStr}`; // Trả về orderNumber dưới dạng chuỗi "1-2642025"
     };
 
     try {
-      const orderNumber = await getNextOrderNumber();
-      const { userOrderId, ...otherData } = req.body; // Tách userOrderId và thu thập các dữ liệu khác
+      const orderNumber = await getNextOrderNumber(); // Lấy orderNumber mới
+      const { userOrderId, ...otherData } = req.body; // Lấy các dữ liệu khác từ body request
 
       const orderData = {
-        orderNumber,
-        ...otherData,
+        orderNumber, // Đảm bảo orderNumber là chuỗi dạng "1-2642025"
+        ...otherData, // Lấy tất cả dữ liệu khác vào order
       };
 
-      // Chỉ thêm userOrder nếu userOrderId được cung cấp
+      // Nếu có userOrderId, thêm vào dữ liệu đơn hàng
       if (userOrderId) {
         orderData.userOrder = userOrderId;
       }
 
-      const order = new Order(orderData);
-      await order.save();
-      res.status(201).json(order);
+      const order = new Order(orderData); // Tạo một đơn hàng mới
+      await order.save(); // Lưu đơn hàng vào database
+
+      res.status(201).json(order); // Trả về đơn hàng mới tạo
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      res.status(400).json({ message: err.message }); // Nếu có lỗi, trả về lỗi
     }
   }
 

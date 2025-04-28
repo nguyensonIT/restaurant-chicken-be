@@ -5,6 +5,7 @@ const categoryRouter = require("./category");
 const productRouter = require("./product");
 const authRouter = require("./auth");
 const siteRouter = require("./site");
+const location = require("./location");
 const errorHandler = require("../app/middleware/errorMiddleware");
 
 function route(app) {
@@ -13,6 +14,7 @@ function route(app) {
   app.use("/api/order", orderRouter);
   app.use("/api/category", categoryRouter);
   app.use("/api/products", productRouter);
+  app.use("/api/location", location);
   app.use("/api/auth", authRouter);
   app.use("/api", siteRouter);
   app.use(errorHandler);

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Order = new Schema({
-  orderNumber: { type: Number, required: true, unique: true },
+  orderNumber: { type: String, required: true, unique: true }, // orderNumber là chuỗi
   addressCustomers: { type: String, required: true },
   nameCustomers: { type: String, required: true },
   note: { type: String, default: "" },
